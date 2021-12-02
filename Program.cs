@@ -123,19 +123,24 @@ class Program
         {
             // Borrar las matriculas d
             // AlumnoId multiplo de 3 y ModuloId Multiplo de 2;
-            var alumnos = db.Alumnos.OrderBy(b => b.AlumnoId);
-            var alumnosMultiplos3 = alumnos.Where(o => o.AlumnoId % 3 == 0);
-            var modulos = db.Modulos.OrderBy(m=> m.ModuloId);
-            var modulosMultiplos2 = modulos.Where(h => h.ModuloId % 2 == 0);
-            var matriculas = db.Matriculas.OrderBy(b => b.MatriculaId);
-            foreach(var i in matriculas){
-                db.Modulos.Remove(db.Matriculas).while (true)
+            foreach (var i in db.Matriculas)
+            {
+                if (i.AlumnoId % 3 == 0 && i.ModuloId % 2 == 0)
                 {
-                     
+                    db.Matriculas.Remove(i);
                 }
             }
-            // AlumnoId multiplo de 2 y ModuloId Multiplo de 5;
 
+            db.SaveChanges();
+            // AlumnoId multiplo de 2 y ModuloId Multiplo de 5;
+            foreach (var j in db.Matriculas)
+            {
+                if (j.AlumnoId % 2 == 0 && j.ModuloId % 5 == 0)
+                {
+                    db.Matriculas.Remove(j);
+                }
+            }
+            db.SaveChanges();
         }   
     }
     static void RealizarQuery()
@@ -143,7 +148,57 @@ class Program
         using (var db = new InstitutoContext())
         {
             // Las queries que se piden en el examen
+            
+            //1 Filtering (cada 1)
+            var q1 = db.Matriculas.Where(o => o.MatriculaId < 84);
+       
+            //1 Anomnimous tupe (cada 1)
+            var q2 = db.Alumnos.Select(o => new{AlumnoId = o.AlumnoId,Efectivo = o.Efectivo});
+            
+            //3 Ordenring  (cada 1)
+            var q3 = db.Modulos.OrderBy(o => o.Curso);
+            var q4 = db.Alumnos.OrderByDescending(o => o.Edad);
+            var q5 = db.Alumnos.OrderBy(o => o.AlumnoId).ThenByDescending(o => o.Efectivo);
+            
+            //2 Joining
+            var q6 = db.Alumnos.Join(db.Matriculas,c => c.AlumnoId,o => o.AlumnoId,(c, o) => new{c.AlumnoId,c.Nombre,o.MatriculaId,o.ModuloId});
+            var q7 = db.Modulos.Join(db.Matriculas,c => c.ModuloId,o => o.ModuloId,(c, o) => new{c.ModuloId,c.Titulo,o.MatriculaId,o.AlumnoId});
+            
+            //3 Grouping
+            var q8 = db.Matriculas.GroupBy(o => o.MatriculaId);
+            var q9 = db.Modulos.GroupBy(o => o.ModuloId);
+            var q10 = db.Alumnos.GroupBy(o => o.AlumnoId);
 
+            //2 Paging  (cada 1)
+            var q11 = db.Alumnos.Where(o => o.AlumnoId == 7).Take(3);
+            var q12 = (from o in db.Modulos where o.ModuloId == 5 orderby o.Credito select o).Skip(2).Take(2);
+            
+            //5 Elements Opertators (cada 1)
+            var q13 = db.Alumnos.Single(c => c.AlumnoId == 2);
+            var q14 = db.Modulos.SingleOrDefault(c => c.ModuloId == 3);
+            var q15 = db.Alumnos.Where(c => c.AlumnoId == 6).DefaultIfEmpty(new Alumno()).Single();
+            var q16 = db.Modulos.Where(o => o.ModuloId == 1).OrderBy(o => o.Credito).Last();
+            var q17 = db.Modulos.Where(c => c.ModuloId == 4).Select(o => o.ModuloId).SingleOrDefault();
+            
+            //Conversiones
+            //1 ToArray
+            string[] names = (from c in db.Alumnos select c.Nombre).ToArray();
+            //1 ToDicctionary
+            Dictionary<int, Alumno> col = db.Alumnos.ToDictionary(c => c.AlumnoId);
+            Dictionary<string, double> customerOrdersWithMaxCost = (from oc in
+            
+            (from o in db.Matriculas
+            join c in db.Alumnos on o.AlumnoId equals c.AlumnoId
+            select new { c.Nombre, o.MatriculaId })
+            
+            group oc by oc.Nombre into g
+            select g).ToDictionary(g => g.Key, g => g.Max(oc => oc.));
+
+            //1 ToList
+            List<Modulo> ordersOver10 = (from o in db.Modulos where o.Credito > 10 orderby o.Credito).ToList();
+            //2 ILookup
+            ILookup<int, string> customerLookup = db.Alumnos.ToLookup(c => c.AlumnoId, c => c.Nombre);
+            
         }
     }
 

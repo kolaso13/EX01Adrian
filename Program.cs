@@ -176,7 +176,7 @@ class Program
             //5 Elements Opertators (cada 1)
             var q13 = db.Alumnos.Single(c => c.AlumnoId == 2);
             var q14 = db.Modulos.SingleOrDefault(c => c.ModuloId == 3);
-            //var q15 = db.Alumnos.Where(c => c.AlumnoId == 6).DefaultIfEmpty(new Alumno()).Single();
+            var q15 = db.Alumnos.Where(c => c.AlumnoId == 6).Single();
             var q16 = db.Modulos.Where(o => o.ModuloId == 1).OrderBy(o => o.Credito).Last();
             var q17 = db.Modulos.Where(c => c.ModuloId == 4).Select(o => o.ModuloId).SingleOrDefault();
             
@@ -197,6 +197,7 @@ class Program
 
             //1 ToList
             List<Modulo> ordersOver10 = (from o in db.Modulos where o.Credito > 10 orderby o.Credito).ToList();*/
+
             //2 ILookup
             ILookup<int, string> customerLookup = db.Alumnos.ToLookup(c => c.AlumnoId, c => c.Nombre);
             

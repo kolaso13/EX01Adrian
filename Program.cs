@@ -150,8 +150,12 @@ class Program
             // Las queries que se piden en el examen
             
             //1 Filtering (cada 1)
-            var q1 = db.Matriculas.Where(o => o.MatriculaId < 84);
-       
+            var q1 = db.Matriculas.Where(o => o.MatriculaId > 84).ToList();
+            
+            foreach(var i in q1){
+                Console.WriteLine(i);
+            }
+
             //1 Anomnimous tupe (cada 1)
             var q2 = db.Alumnos.Select(o => new{AlumnoId = o.AlumnoId,Efectivo = o.Efectivo});
             
@@ -200,6 +204,7 @@ class Program
 
             //2 ILookup
             ILookup<int, string> customerLookup = db.Alumnos.ToLookup(c => c.AlumnoId, c => c.Nombre);
+            
             
         }
     }

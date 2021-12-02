@@ -176,14 +176,14 @@ class Program
             //5 Elements Opertators (cada 1)
             var q13 = db.Alumnos.Single(c => c.AlumnoId == 2);
             var q14 = db.Modulos.SingleOrDefault(c => c.ModuloId == 3);
-            var q15 = db.Alumnos.Where(c => c.AlumnoId == 6).DefaultIfEmpty(new Alumno()).Single();
+            //var q15 = db.Alumnos.Where(c => c.AlumnoId == 6).DefaultIfEmpty(new Alumno()).Single();
             var q16 = db.Modulos.Where(o => o.ModuloId == 1).OrderBy(o => o.Credito).Last();
             var q17 = db.Modulos.Where(c => c.ModuloId == 4).Select(o => o.ModuloId).SingleOrDefault();
             
             //Conversiones
             //1 ToArray
             string[] names = (from c in db.Alumnos select c.Nombre).ToArray();
-            
+
             //1 ToDicctionary
             /*Dictionary<int, Alumno> col = db.Alumnos.ToDictionary(c => c.AlumnoId);
             Dictionary<string, double> customerOrdersWithMaxCost = (from oc in

@@ -183,8 +183,9 @@ class Program
             //Conversiones
             //1 ToArray
             string[] names = (from c in db.Alumnos select c.Nombre).ToArray();
+            
             //1 ToDicctionary
-            Dictionary<int, Alumno> col = db.Alumnos.ToDictionary(c => c.AlumnoId);
+            /*Dictionary<int, Alumno> col = db.Alumnos.ToDictionary(c => c.AlumnoId);
             Dictionary<string, double> customerOrdersWithMaxCost = (from oc in
             
             (from o in db.Matriculas
@@ -195,7 +196,7 @@ class Program
             select g).ToDictionary(g => g.Key, g => g.Max(oc => oc.));
 
             //1 ToList
-            List<Modulo> ordersOver10 = (from o in db.Modulos where o.Credito > 10 orderby o.Credito).ToList();
+            List<Modulo> ordersOver10 = (from o in db.Modulos where o.Credito > 10 orderby o.Credito).ToList();*/
             //2 ILookup
             ILookup<int, string> customerLookup = db.Alumnos.ToLookup(c => c.AlumnoId, c => c.Nombre);
             
